@@ -1,11 +1,77 @@
-# Archivos de Visual Studio
-.vs/
-*.user
+# --- Archivos de usuario ---
 *.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-# Archivos de compilaciÛn
+# --- Carpetas de VS / VS Code ---
+.vs/
+.vscode/
+
+# --- Archivos de compilaci√≥n ---
 bin/
 obj/
+out/
+Debug/
+Release/
 
-# Archivos de configuraciÛn temporales
-*.vsidx
+# --- Archivos de test / coverage ---
+*.testresults
+*.trx
+*.coverage
+*.coveragexml
+
+# --- Logs ---
+*.log
+
+# --- Configuraci√≥n temporal ---
+*.tmp
+*.temp
+
+# --- Archivos de Resharper / Rider ---
+_ReSharper*/
+*.DotSettings.user
+
+# --- Archivos de paquetes ---
+*.nupkg
+*.snupkg
+*.nuspec
+*.psmdcp
+packages/
+
+# --- Archivos de dependencias locales ---
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# --- Configuraci√≥n de usuario de SQL ---
+*.mdf
+*.ldf
+*.ndf
+
+# --- Archivos de Docker ---
+**/docker-compose.override.yml
+**/docker-compose.override.*.yml
+
+# --- Archivos de contenedores ---
+**/docker-compose.vs.debug.yml
+**/docker-compose.vs.release.yml
+
+# --- Archivos de secretos ---
+secrets.json
+.env
+
+# --- Archivos generados por herramientas ---
+Generated_Code/
+
+# --- Archivos de Copilot / IntelliCode ---
+*.db
+*.db-shm
+*.db-wal
+SemanticSymbols*
+CodeChunks*
+
+# --- Archivos de publish ---
+publish/
+*.pubxml
+*.pubxml.user
