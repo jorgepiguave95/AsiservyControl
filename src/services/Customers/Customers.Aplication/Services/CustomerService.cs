@@ -1,40 +1,81 @@
 ﻿using Customers.Aplication.Interfaces;
 using Customers.Domain.Entities;
+using Customers.Domain.ValueObjects;
+using Contracts.Customers;
 
 namespace Customers.Aplication.Services
 {
     public class CustomerService : ICustomerService
     {
-        private IRepository<Customer> _customerRepository;
+        private readonly IRepository<Customer> _customerRepository;
 
         public CustomerService(IRepository<Customer> customerRepository)
         {
             _customerRepository = customerRepository;
         }
 
-        async Task ICustomerService.AddCustomer(Customer customer)
+        public async Task<IEnumerable<CustomerResponseDto>> GetAllCustomers()
         {
-            return await _customerRepository.Add(customer);
+            var customers = await _customerRepository.GetAll();
+            return customers.Select(MapToResponseDto);
         }
 
-        async Task<IEnumerable<Customer>> ICustomerService.GetAllCustomers()
+        public async Task<CustomerResponseDto?> GetCustomerById(Guid id)
         {
-            return await _customerRepository.GetAll();
+            var customer = await _customerRepository.GetById(id);
+            return customer != null ? MapToResponseDto(customer) : null;
         }
 
-        async Task<Customer> ICustomerService.GetCustomerById(Guid id)
+        public async Task<CustomerResponseDto> AddCustomer(CreateCustomerDto createCustomerDto)
         {
-            return await _customerRepository.GetById(id);
+            var customer = MapToEntity(createCustomerDto);
+            await _customerRepository.Add(customer);
+            await _customerRepository.Save();
+            return MapToResponseDto(customer);
         }
 
-        async Task ICustomerService.UpdateCustomer(Customer customer)
+        public async Task<CustomerResponseDto?> UpdateCustomer(UpdateCustomerDto updateCustomerDto)
         {
-            await _customerRepository.Update(customer);
+            var customer = await _customerRepository.GetById(updateCustomerDto.Id);
+            if (customer == null)
+                return null;
+
+            customer.UpdateEmail(new Email(updateCustomerDto.Email ?? string.Empty));
+            customer.UpdatePhone(new PhoneNumber(updateCustomerDto.Phone ?? string.Empty));
+
+            _customerRepository.Update(customer);
+            await _customerRepository.Save();
+            return MapToResponseDto(customer);
         }
 
-        async Task ICustomerService.DeleteCustomer(Customer customer)
+        public async Task<bool> DeleteCustomer(Guid id)
         {
-            await _customerRepository.Delete(customer);
+            var customer = await _customerRepository.GetById(id);
+            if (customer == null)
+                return false;
+
+            _customerRepository.Delete(customer);
+            await _customerRepository.Save();
+            return true;
+        }
+
+        private CustomerResponseDto MapToResponseDto(Customer customer)
+        {
+            return new CustomerResponseDto
+            {
+                Id = customer.Id,
+                FirstName = customer.FirstName,
+                LastName = customer.LastName,
+                Email = customer.Email.Value,
+                Phone = customer.Phone.Value
+            };
+        }
+
+        private Customer MapToEntity(CreateCustomerDto dto)
+        {
+            var email = new Email(dto.Email ?? string.Empty);
+            var phone = new PhoneNumber(dto.Phone ?? string.Empty);
+            return new Customer(dto.FirstName ?? string.Empty, dto.LastName ?? string.Empty, email, phone);
         }
     }
 }

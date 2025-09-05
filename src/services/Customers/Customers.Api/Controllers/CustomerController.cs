@@ -1,5 +1,5 @@
 ﻿using Customers.Aplication.Interfaces;
-using Customers.Domain.Entities;
+using Contracts.Customers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Customers.Api.Controllers
@@ -16,7 +16,7 @@ namespace Customers.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetAllCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerResponseDto>>> GetAllCustomers()
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Customers.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerById(Guid id)
+        public async Task<ActionResult<CustomerResponseDto>> GetCustomerById(Guid id)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Customers.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateCustomer([FromBody] Customer customer)
+        public async Task<ActionResult<CustomerResponseDto>> CreateCustomer([FromBody] CreateCustomerDto createCustomerDto)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace Customers.Api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                await _customerService.AddCustomer(customer);
+                var customer = await _customerService.AddCustomer(createCustomerDto);
                 return CreatedAtAction(nameof(GetCustomerById), new { id = customer.Id }, customer);
             }
             catch (Exception ex)
@@ -67,11 +67,11 @@ namespace Customers.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateCustomer(Guid id, [FromBody] Customer customer)
+        public async Task<ActionResult<CustomerResponseDto>> UpdateCustomer(Guid id, [FromBody] UpdateCustomerDto updateCustomerDto)
         {
             try
             {
-                if (id != customer.Id)
+                if (id != updateCustomerDto.Id)
                 {
                     return BadRequest("El ID del parámetro no coincide con el ID del cliente");
                 }
@@ -81,14 +81,13 @@ namespace Customers.Api.Controllers
                     return BadRequest(ModelState);
                 }
 
-                var existingCustomer = await _customerService.GetCustomerById(id);
-                if (existingCustomer == null)
+                var customer = await _customerService.UpdateCustomer(updateCustomerDto);
+                if (customer == null)
                 {
                     return NotFound($"Cliente con ID {id} no encontrado");
                 }
 
-                await _customerService.UpdateCustomer(customer);
-                return NoContent();
+                return Ok(customer);
             }
             catch (Exception ex)
             {
@@ -101,13 +100,12 @@ namespace Customers.Api.Controllers
         {
             try
             {
-                var existingCustomer = await _customerService.GetCustomerById(id);
-                if (existingCustomer == null)
+                var deleted = await _customerService.DeleteCustomer(id);
+                if (!deleted)
                 {
                     return NotFound($"Cliente con ID {id} no encontrado");
                 }
 
-                await _customerService.DeleteCustomer(id);
                 return NoContent();
             }
             catch (Exception ex)
