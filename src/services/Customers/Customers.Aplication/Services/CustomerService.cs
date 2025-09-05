@@ -43,14 +43,6 @@ namespace Customers.Aplication.Services
             customer.UpdateEmail(new Email(updateCustomerDto.Email ?? string.Empty));
             customer.UpdatePhone(new PhoneNumber(updateCustomerDto.Phone ?? string.Empty));
 
-            if (updateCustomerDto.EstaActivo != customer.EstaActivo)
-            {
-                if (updateCustomerDto.EstaActivo)
-                    customer.Activate();
-                else
-                    customer.Deactivate();
-            }
-
             _customerRepository.Update(customer);
             await _customerRepository.Save();
             return MapToResponseDto(customer);
@@ -108,7 +100,7 @@ namespace Customers.Aplication.Services
         {
             var email = new Email(dto.Email ?? string.Empty);
             var phone = new PhoneNumber(dto.Phone ?? string.Empty);
-            return new Customer(dto.FirstName ?? string.Empty, dto.LastName ?? string.Empty, email, phone, dto.EstaActivo);
+            return new Customer(dto.FirstName ?? string.Empty, dto.LastName ?? string.Empty, email, phone, estaActivo: true);
         }
     }
 }

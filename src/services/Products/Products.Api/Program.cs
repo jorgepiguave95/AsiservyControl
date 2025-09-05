@@ -1,20 +1,25 @@
+using Products.Aplication.Interfaces;
+using Products.Aplication.Services;
+using Products.Domain.Entities;
+using Products.Infraestructure.Repositories;
+using Products.Infraestructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+
+// Services
+builder.Services.AddScoped<IProductService, ProductService>();
+
+// Repository
+builder.Services.AddScoped<IRepository<ProductControl>, ProductControlRepository>();
+
+// Entity Framework
+builder.Services.AddDbContext<ProductsDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
