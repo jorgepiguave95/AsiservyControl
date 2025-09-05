@@ -7,14 +7,20 @@ namespace Customers.Domain.Entities
     {
         public Email Email { get; private set; }
         public PhoneNumber Phone { get; private set; }
+        public bool EstaActivo { get; private set; }
 
-        private Customer() : base() { } // EF Core
+        private Customer() : base()
+        {
+            Email = null!;
+            Phone = null!;
+        }
 
-        public Customer(string firstName, string lastName, Email email, PhoneNumber phone)
+        public Customer(string firstName, string lastName, Email email, PhoneNumber phone, bool estaActivo = true)
             : base(firstName, lastName)
         {
             Email = email ?? throw new DomainException("El email es requerido");
             Phone = phone ?? throw new DomainException("El teléfono es requerido");
+            EstaActivo = estaActivo;
         }
 
         public void UpdateEmail(Email newEmail)
@@ -25,6 +31,16 @@ namespace Customers.Domain.Entities
         public void UpdatePhone(PhoneNumber newPhone)
         {
             Phone = newPhone ?? throw new DomainException("El teléfono es requerido");
+        }
+
+        public void Activate()
+        {
+            EstaActivo = true;
+        }
+
+        public void Deactivate()
+        {
+            EstaActivo = false;
         }
     }
 }

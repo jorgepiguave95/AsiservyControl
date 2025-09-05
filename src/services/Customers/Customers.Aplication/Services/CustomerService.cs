@@ -1,7 +1,7 @@
 ﻿using Customers.Aplication.Interfaces;
 using Customers.Domain.Entities;
 using Customers.Domain.ValueObjects;
-using Contracts.Customers;
+using Contracts.Customer;
 
 namespace Customers.Aplication.Services
 {
@@ -43,6 +43,14 @@ namespace Customers.Aplication.Services
             customer.UpdateEmail(new Email(updateCustomerDto.Email ?? string.Empty));
             customer.UpdatePhone(new PhoneNumber(updateCustomerDto.Phone ?? string.Empty));
 
+            if (updateCustomerDto.EstaActivo != customer.EstaActivo)
+            {
+                if (updateCustomerDto.EstaActivo)
+                    customer.Activate();
+                else
+                    customer.Deactivate();
+            }
+
             _customerRepository.Update(customer);
             await _customerRepository.Save();
             return MapToResponseDto(customer);
@@ -59,6 +67,30 @@ namespace Customers.Aplication.Services
             return true;
         }
 
+        public async Task<CustomerResponseDto?> ActivateCustomer(Guid id)
+        {
+            var customer = await _customerRepository.GetById(id);
+            if (customer == null)
+                return null;
+
+            customer.Activate();
+            _customerRepository.Update(customer);
+            await _customerRepository.Save();
+            return MapToResponseDto(customer);
+        }
+
+        public async Task<CustomerResponseDto?> DeactivateCustomer(Guid id)
+        {
+            var customer = await _customerRepository.GetById(id);
+            if (customer == null)
+                return null;
+
+            customer.Deactivate();
+            _customerRepository.Update(customer);
+            await _customerRepository.Save();
+            return MapToResponseDto(customer);
+        }
+
         private CustomerResponseDto MapToResponseDto(Customer customer)
         {
             return new CustomerResponseDto
@@ -67,7 +99,8 @@ namespace Customers.Aplication.Services
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 Email = customer.Email.Value,
-                Phone = customer.Phone.Value
+                Phone = customer.Phone.Value,
+                EstaActivo = customer.EstaActivo
             };
         }
 
@@ -75,7 +108,7 @@ namespace Customers.Aplication.Services
         {
             var email = new Email(dto.Email ?? string.Empty);
             var phone = new PhoneNumber(dto.Phone ?? string.Empty);
-            return new Customer(dto.FirstName ?? string.Empty, dto.LastName ?? string.Empty, email, phone);
+            return new Customer(dto.FirstName ?? string.Empty, dto.LastName ?? string.Empty, email, phone, dto.EstaActivo);
         }
     }
 }

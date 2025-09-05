@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Contracts.Customers
+namespace Contracts.Customer
 {
     public class CreateCustomerDto
     {
@@ -8,5 +8,6 @@ namespace Contracts.Customers
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
+        public bool EstaActivo { get; set; } = true; // Por defecto activo
     }
 }

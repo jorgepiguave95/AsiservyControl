@@ -1,6 +1,7 @@
 ﻿using Customers.Aplication.Interfaces;
-using Contracts.Customers;
+using Contracts.Customer;
 using Microsoft.AspNetCore.Mvc;
+using Customers.Domain.Erros;
 
 namespace Customers.Api.Controllers
 {
@@ -23,6 +24,10 @@ namespace Customers.Api.Controllers
                 var customers = await _customerService.GetAllCustomers();
                 return Ok(customers);
             }
+            catch (DomainException ex)
+            {
+                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
@@ -40,6 +45,10 @@ namespace Customers.Api.Controllers
                     return NotFound($"Cliente con ID {id} no encontrado");
                 }
                 return Ok(customer);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -59,6 +68,10 @@ namespace Customers.Api.Controllers
 
                 var customer = await _customerService.AddCustomer(createCustomerDto);
                 return CreatedAtAction(nameof(GetCustomerById), new { id = customer.Id }, customer);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -89,6 +102,10 @@ namespace Customers.Api.Controllers
 
                 return Ok(customer);
             }
+            catch (DomainException ex)
+            {
+                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+            }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error interno del servidor: {ex.Message}");
@@ -107,6 +124,56 @@ namespace Customers.Api.Controllers
                 }
 
                 return NoContent();
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        [HttpPatch("{id}/activate")]
+        public async Task<ActionResult<CustomerResponseDto>> ActivateCustomer(Guid id)
+        {
+            try
+            {
+                var customer = await _customerService.ActivateCustomer(id);
+                if (customer == null)
+                {
+                    return NotFound($"Cliente con ID {id} no encontrado");
+                }
+
+                return Ok(customer);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+        [HttpPatch("{id}/deactivate")]
+        public async Task<ActionResult<CustomerResponseDto>> DeactivateCustomer(Guid id)
+        {
+            try
+            {
+                var customer = await _customerService.DeactivateCustomer(id);
+                if (customer == null)
+                {
+                    return NotFound($"Cliente con ID {id} no encontrado");
+                }
+
+                return Ok(customer);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-namespace Contracts.Customers
+namespace Contracts.Customer
 {
     public class CustomerResponseDto
     {
@@ -7,5 +7,7 @@ namespace Contracts.Customers
         public string? LastName { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
+        public bool EstaActivo { get; set; }
+        public string FullName => $"{FirstName} {LastName}".Trim();
     }
 }

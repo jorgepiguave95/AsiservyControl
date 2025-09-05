@@ -29,6 +29,11 @@ namespace Customers.Infraestructure.Persistence
 
             modelBuilder.Entity<Customer>(entity =>
             {
+
+                entity.Property(c => c.EstaActivo)
+                      .IsRequired()
+                      .HasDefaultValue(true);
+
                 // Value Object: Email
                 entity.OwnsOne(c => c.Email, email =>
                 {

@@ -1,5 +1,5 @@
 ﻿using Customers.Domain.Entities;
-using Contracts.Customers;
+using Contracts.Customer;
 
 namespace Customers.Aplication.Interfaces
 {
@@ -10,5 +10,7 @@ namespace Customers.Aplication.Interfaces
         Task<CustomerResponseDto> AddCustomer(CreateCustomerDto createCustomerDto);
         Task<CustomerResponseDto?> UpdateCustomer(UpdateCustomerDto updateCustomerDto);
         Task<bool> DeleteCustomer(Guid id);
+        Task<CustomerResponseDto?> ActivateCustomer(Guid id);
+        Task<CustomerResponseDto?> DeactivateCustomer(Guid id);
     }
 }
