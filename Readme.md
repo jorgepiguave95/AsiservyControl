@@ -1,69 +1,79 @@
-# ASISERVY - Microservices Architecture
+# ASISERVY - Arquitectura de Microservicios
 
-### 1. Environment Configuration
+# 1. Configuración del Entorno
 
-Create and configure your environment variables:
+1. Crea y configura tus variables de entorno, copia la plantilla de variables de entorno y edita el archivo .env con tu configuración específica
+
+2. Abrir Docker Desktop
+
+3. Abrir una terminal y ejecutar el siguiente comando en la raiz del proyecto
 
 ```bash
-# Copy the environment template
-cp .env.example .env
-
-# Edit the .env file with your specific configuration
+docker-compose up --build
 ```
 
-### 2. Application Deployment
+4. Ingresar al gestor de base de datos y crear las bases de datos correspondientes.
 
-#### Using Docker Compose
+5. Abrir la terminal y ubicarse en cada microservicio para realizar las migraciones de Entity Framework Core.
 
-```bash
-# Navigate to the project root directory
-cd ASISERVY
+# Migraciones con dotnet
 
-# Build and start all services
-docker-compose up --build -d
+```bash Customner
+# Navegar al proyecto de infraestructura
+cd src/services/Customers/Customers.Infraestructure
+
+# Crear migración
+dotnet ef migrations add NombreMigracion
+
+# Aplicar migración
+dotnet ef database update
+
 ```
 
-### 3. Application Access
+```bash Products
+cd src/services/Products/Products.Infraestructure
 
-Once all services are running successfully:
+# Crear migración
+dotnet ef migrations add NombreMigracion
 
-| Service         | URL                             | Description                   |
-| --------------- | ------------------------------- | ----------------------------- |
-| **API Gateway** | `http://localhost:3000`         | Main application entry point  |
-| **Swagger UI**  | `http://localhost:3000/swagger` | Interactive API documentation |
-| **Database**    | `localhost:1433`                | SQL Server instance           |
+# Aplicar migración
+dotnet ef database update
 
-## Database Migrations
-
-```bash
-dotnet ef migrations add AddCustomerEmailValidation
-dotnet ef migrations add CreateProductCategoryTable
-dotnet ef migrations add UpdateProductPriceConstraints
 ```
 
-## Docker Services
+# Acceso a la Aplicación
 
-The application consists of the following containerized services:
+Una vez que todos los servicios estén ejecutándose correctamente:
 
-| Service     | Port     | Description            |
-| ----------- | -------- | ---------------------- |
-| `gateway`   | 3000     | API Gateway service    |
-| `customers` | Internal | Customers microservice |
-| `products`  | Internal | Products microservice  |
-| `sqlserver` | 1433     | SQL Server database    |
+| Servicio          | URL                             | Descripción                         |
+| ----------------- | ------------------------------- | ----------------------------------- |
+| **API Gateway**   | `http://localhost:3000`         | Punto de entrada principal          |
+| **Swagger UI**    | `http://localhost:3000/swagger` | Documentación interactiva de la API |
+| **Base de Datos** | `localhost:1433`                | Instancia de SQL Server             |
 
-### Useful Commands
+# Servicios Docker
+
+La aplicación está compuesta por los siguientes servicios en contenedores:
+
+| Servicio    | Puerto  | Descripción                |
+| ----------- | ------- | -------------------------- |
+| `gateway`   | 3000    | Servicio API Gateway       |
+| `customers` | Interno | Microservicio de Clientes  |
+| `products`  | Interno | Microservicio de Productos |
+| `sqlserver` | 1433    | Base de datos SQL Server   |
+
+### Comandos Útiles
 
 ```bash
-# Stop all services
+# Detener todos los servicios
 docker-compose down
 
-# Remove all containers and volumes
+# Eliminar todos los contenedores y volúmenes
 docker-compose down -v
 
-# Rebuild specific service
+# Reconstruir un servicio específico
 docker-compose up --build gateway
 
-# View service logs
+# Ver logs de un servicio
 docker-compose logs -f customers
 ```
