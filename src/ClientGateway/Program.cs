@@ -57,17 +57,17 @@ app.UseCors("AllowAll");
 app.UseAuthorization();
 
 // Health check endpoint
-app.MapGet("/health", () => new
-{
-    Status = "Healthy",
-    Timestamp = DateTime.UtcNow,
-    Environment = app.Environment.EnvironmentName,
-    Services = new
-    {
-        CustomersService = customersBaseUrl,
-        ProductsService = productsBaseUrl
-    }
-});
+// app.MapGet("/health", () => new
+// {
+//     Status = "Healthy",
+//     Timestamp = DateTime.UtcNow,
+//     Environment = app.Environment.EnvironmentName,
+//     Services = new
+//     {
+//         CustomersService = customersBaseUrl,
+//         ProductsService = productsBaseUrl
+//     }
+// });
 
 app.MapControllers();
 
