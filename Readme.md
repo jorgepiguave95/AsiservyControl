@@ -23,18 +23,6 @@ cd ASISERVY
 docker-compose up --build -d
 ```
 
-#### Service Status Verification
-
-```bash
-# Check running containers
-docker-compose ps
-
-# View service logs
-docker-compose logs gateway
-docker-compose logs customers
-docker-compose logs products
-```
-
 ### 3. Application Access
 
 Once all services are running successfully:
@@ -45,33 +33,30 @@ Once all services are running successfully:
 | **Swagger UI**  | `http://localhost:3000/swagger` | Interactive API documentation |
 | **Database**    | `localhost:1433`                | SQL Server instance           |
 
-### Local Development Setup
+### Customers Service Migrations
 
 ```bash
-# Restore dependencies
-dotnet restore
-
-# Build the solution
-dotnet build
-
-# Run specific service locally
-dotnet run --project src/ClientGateway
-```
-
-### Database Migrations
-
-The application uses Entity Framework Core for database management:
-
-```bash
-# Customers Service Migrations
+# Create a new migration
 dotnet ef migrations add InitialCreate --project src/services/Customers/Customers.Infrastructure --startup-project src/services/Customers
 
-# Products Service Migrations
+# Apply migrations to database
+dotnet ef database update --project src/services/Customers/Customers.Infrastructure --startup-project src/services/Customers
+
+# List all migrations
+dotnet ef migrations list --project src/services/Customers/Customers.Infrastructure --startup-project src/services/Customers
+```
+
+### Products Service Migrations
+
+```bash
+# Create a new migration
 dotnet ef migrations add InitialCreate --project src/services/Products/Products.Infrastructure --startup-project src/services/Products
 
-# Apply migrations
-dotnet ef database update --project src/services/Customers/Customers.Infrastructure --startup-project src/services/Customers
+# Apply migrations to database
 dotnet ef database update --project src/services/Products/Products.Infrastructure --startup-project src/services/Products
+
+# List all migrations
+dotnet ef migrations list --project src/services/Products/Products.Infrastructure --startup-project src/services/Products
 ```
 
 ### Testing

@@ -13,7 +13,7 @@ services:
     container_name: sqlserver
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: ${DB_PASSWORD}
+      SA_PASSWORD: ${DB_PASS}
     ports:
       - "${DB_PORT}:1433"
     restart: always
@@ -32,7 +32,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASS: ${DB_PASS}
       CUSTOMERS_DB_NAME: ${DB_NAME_CONSUMER}
     networks:
       - internal
@@ -50,7 +50,7 @@ services:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PASS: ${DB_PASS}
       PRODUCTS_DB_NAME: ${DB_NAME_PRODUCT}
     networks:
       - internal
@@ -64,9 +64,8 @@ services:
       dockerfile: ClientGateway/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
-      ASPNETCORE_URLS: "http://+:8080"
-      Microservices__CustomersService__BaseUrl: "http://customers:8080"
-      Microservices__ProductsService__BaseUrl: "http://products:8080"
+      CustomersMicroservice: "http://customers:8080"
+      ProductsMicroservice: "http://products:8080"
     ports:
       - "${GATEWAY_PORT}:8080"
     depends_on:

@@ -12,8 +12,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-var customersBaseUrl = builder.Configuration["Microservices:CustomersService:BaseUrl"] ?? "http://localhost:5201";
-var productsBaseUrl = builder.Configuration["Microservices:ProductsService:BaseUrl"] ?? "http://localhost:5203";
+var customersBaseUrl = builder.Configuration["CustomersMicroservice"] ?? "http://localhost:5201";
+var productsBaseUrl = builder.Configuration["ProductsMicroservice"] ?? "http://localhost:5203";
 
 builder.Services.AddHttpClient("CustomersService", client =>
 {
@@ -55,6 +55,20 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 app.UseAuthorization();
+
+// Health check endpoint
+app.MapGet("/health", () => new
+{
+    Status = "Healthy",
+    Timestamp = DateTime.UtcNow,
+    Environment = app.Environment.EnvironmentName,
+    Services = new
+    {
+        CustomersService = customersBaseUrl,
+        ProductsService = productsBaseUrl
+    }
+});
+
 app.MapControllers();
 
 app.Run();
