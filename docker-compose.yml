@@ -25,7 +25,7 @@ services:
   customers:
     build:
       context: ./src
-      dockerfile: Customers/Dockerfile
+      dockerfile: services/Customers/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: "http://+:8080"
@@ -33,17 +33,17 @@ services:
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      CUSTOMERS_DB_NAME: ${CUSTOMERS_DB_NAME}
+      CUSTOMERS_DB_NAME: ${DB_NAME_CONSUMER}
     networks:
       - internal
       - database
     depends_on:
       - sqlserver
 
-  accounts:
+  products:
     build:
       context: ./src
-      dockerfile: Accounts/Dockerfile
+      dockerfile: services/Products/Dockerfile
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: "http://+:8080"
@@ -51,7 +51,7 @@ services:
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      ACCOUNTS_DB_NAME: ${ACCOUNTS_DB_NAME}
+      PRODUCTS_DB_NAME: ${DB_NAME_PRODUCT}
     networks:
       - internal
       - database
@@ -65,13 +65,12 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: "http://+:8080"
-      CUSTOMERS_BASEURL: "http://customers:8080"
-      ACCOUNTS_BASEURL: "http://accounts:8080"
+      Microservices__CustomersService__BaseUrl: "http://customers:8080"
+      Microservices__ProductsService__BaseUrl: "http://products:8080"
     ports:
       - "${GATEWAY_PORT}:8080"
     depends_on:
       - customers
-      - accounts
-      - sqlserver
+      - products
     networks:
       - internal

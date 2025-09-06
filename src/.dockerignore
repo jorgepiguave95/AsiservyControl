@@ -1,0 +1,55 @@
+# Directorios de build y cache comunes
+**/bin/
+**/obj/
+**/out/
+**/publish/
+**/Debug/
+**/Release/
+
+# Archivos de usuario y temporales
+**/.vs/
+**/.vscode/
+**/*.user
+**/.suo
+**/.cache
+**/TestResults/
+**/.nuget/
+
+# Archivos de documentación y configuración
+**/*.md
+**/README.*
+**/.env
+**/.env.local
+
+# Archivos de log
+**/logs/
+**/*.log
+
+# Archivos de Node.js (si existen)
+**/node_modules/
+**/npm-debug.log
+**/yarn-error.log
+
+# Archivos de Git
+**/.git/
+**/.gitignore
+**/.gitattributes
+
+# Archivos específicos de desarrollo
+**/launchSettings.json
+**/Properties/launchSettings.json
+
+# Archivos de configuración de IDE
+**/.idea/
+**/*.sln.docstates
+**/StyleCopReport.xml
+
+# Archivos de backup
+**/Backup*/
+**/UpgradeLog*.XML
+**/UpgradeLog*.htm
+
+# Archivos temporales de Windows
+**/Thumbs.db
+**/ehthumbs.db
+**/Desktop.ini

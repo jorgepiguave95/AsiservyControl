@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Contracts.Customer;
+using System.Text.Json;
 
 namespace ClientGateway.Controllers
 {
@@ -23,7 +25,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
+                    var customers = JsonSerializer.Deserialize<IEnumerable<CustomerResponseDto>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(customers);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -44,7 +47,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
+                    var customer = JsonSerializer.Deserialize<CustomerResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(customer);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -56,11 +60,11 @@ namespace ClientGateway.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer([FromBody] object customerData)
+        public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerDto customerData)
         {
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(customerData);
+                var json = JsonSerializer.Serialize(customerData);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync("api/customer", content);
@@ -68,7 +72,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return StatusCode((int)response.StatusCode, responseContent);
+                    var createdCustomer = JsonSerializer.Deserialize<CustomerResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return StatusCode((int)response.StatusCode, createdCustomer);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -80,11 +85,13 @@ namespace ClientGateway.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] object customerData)
+        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] UpdateCustomerDto customerData)
         {
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(customerData);
+                customerData.Id = id;
+
+                var json = JsonSerializer.Serialize(customerData);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PutAsync($"api/customer/{id}", content);
@@ -92,7 +99,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return Ok(responseContent);
+                    var updatedCustomer = JsonSerializer.Deserialize<CustomerResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(updatedCustomer);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());

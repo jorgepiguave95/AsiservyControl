@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Contracts.Product;
+using System.Text.Json;
 
 namespace ClientGateway.Controllers
 {
@@ -24,7 +26,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
+                    var productControls = JsonSerializer.Deserialize<IEnumerable<ProductControlResponseDto>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(productControls);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -45,7 +48,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
+                    var productControl = JsonSerializer.Deserialize<ProductControlResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(productControl);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -57,11 +61,11 @@ namespace ClientGateway.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProductControl([FromBody] object productData)
+        public async Task<IActionResult> CreateProductControl([FromBody] CreateProductControlDto productData)
         {
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(productData);
+                var json = JsonSerializer.Serialize(productData);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync("api/product", content);
@@ -69,7 +73,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return StatusCode((int)response.StatusCode, responseContent);
+                    var createdProductControl = JsonSerializer.Deserialize<ProductControlResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return StatusCode((int)response.StatusCode, createdProductControl);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -81,11 +86,13 @@ namespace ClientGateway.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateProductControl(Guid id, [FromBody] object productData)
+        public async Task<IActionResult> UpdateProductControl(Guid id, [FromBody] UpdateProductControlDto productData)
         {
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(productData);
+                productData.Id = id;
+
+                var json = JsonSerializer.Serialize(productData);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PutAsync($"api/product/{id}", content);
@@ -93,7 +100,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return Ok(responseContent);
+                    var updatedProductControl = JsonSerializer.Deserialize<ProductControlResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(updatedProductControl);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -116,7 +124,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
+                    var productControlDetails = JsonSerializer.Deserialize<IEnumerable<ProductControlDetailResponseDto>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(productControlDetails);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -137,7 +146,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    return Ok(content);
+                    var productControlDetail = JsonSerializer.Deserialize<ProductControlDetailResponseDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(productControlDetail);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -149,11 +159,11 @@ namespace ClientGateway.Controllers
         }
 
         [HttpPost("details")]
-        public async Task<IActionResult> CreateProductControlDetail([FromBody] object detailData)
+        public async Task<IActionResult> CreateProductControlDetail([FromBody] CreateProductControlDetailDto detailData)
         {
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(detailData);
+                var json = JsonSerializer.Serialize(detailData);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync("api/product/details", content);
@@ -161,7 +171,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return StatusCode((int)response.StatusCode, responseContent);
+                    var createdDetail = JsonSerializer.Deserialize<ProductControlDetailResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return StatusCode((int)response.StatusCode, createdDetail);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
@@ -173,11 +184,13 @@ namespace ClientGateway.Controllers
         }
 
         [HttpPut("details/{id}")]
-        public async Task<IActionResult> UpdateProductControlDetail(Guid id, [FromBody] object detailData)
+        public async Task<IActionResult> UpdateProductControlDetail(Guid id, [FromBody] UpdateProductControlDetailDto detailData)
         {
             try
             {
-                var json = System.Text.Json.JsonSerializer.Serialize(detailData);
+                detailData.Id = id;
+
+                var json = JsonSerializer.Serialize(detailData);
                 var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PutAsync($"api/product/details/{id}", content);
@@ -185,7 +198,8 @@ namespace ClientGateway.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var responseContent = await response.Content.ReadAsStringAsync();
-                    return Ok(responseContent);
+                    var updatedDetail = JsonSerializer.Deserialize<ProductControlDetailResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(updatedDetail);
                 }
 
                 return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());

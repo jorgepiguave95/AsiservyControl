@@ -29,8 +29,16 @@ builder.Services.AddScoped<IRepository<ProductControl>, ProductControlRepository
 builder.Services.AddScoped<IProductControlRepository, ProductControlRepository>();
 
 // Entity Framework
+var dbHost = builder.Configuration["DB_HOST"];
+var dbPort = builder.Configuration["DB_PORT"];
+var dbUser = builder.Configuration["DB_USER"];
+var dbPassword = builder.Configuration["DB_PASS"];
+var dbName = builder.Configuration["DB_NAME"];
+
+var connectionString = $"Server={dbHost},{dbPort};Database={dbName};User Id={dbUser};Password={dbPassword};TrustServerCertificate=true;";
+
 builder.Services.AddDbContext<ProductsDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 

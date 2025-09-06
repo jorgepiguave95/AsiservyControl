@@ -28,8 +28,17 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IRepository<Customer>, CustomerRepository>();
 
 // Entity Framework
+var dbHost = builder.Configuration["DB_HOST"];
+var dbPort = builder.Configuration["DB_PORT"];
+var dbUser = builder.Configuration["DB_USER"];
+var dbPassword = builder.Configuration["DB_PASS"];
+var dbName = builder.Configuration["DB_NAME"];
+
+var connectionString = $"Server={dbHost},{dbPort};Database={dbName};User Id={dbUser};Password={dbPassword};TrustServerCertificate=true;";
+
+
 builder.Services.AddDbContext<CustomersDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
