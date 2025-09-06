@@ -9,6 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowGateway", builder =>
+    {
+        builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Services
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
@@ -21,6 +33,7 @@ builder.Services.AddDbContext<CustomersDbContext>(options =>
 
 var app = builder.Build();
 
+app.UseCors("AllowGateway");
 app.UseAuthorization();
 
 app.MapControllers();
