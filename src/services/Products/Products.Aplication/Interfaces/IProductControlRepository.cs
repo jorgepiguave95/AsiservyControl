@@ -6,5 +6,6 @@ namespace Products.Aplication.Interfaces
     {
         Task<IEnumerable<ProductControlDetail>> GetDetailsByProductControlId(Guid productControlId);
         Task<ProductControlDetail?> GetDetailById(Guid detailId);
+        Task AddDetail(ProductControlDetail detail);
     }
 }

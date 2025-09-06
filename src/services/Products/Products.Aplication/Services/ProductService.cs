@@ -75,7 +75,7 @@ namespace Products.Aplication.Services
             var tipoControl = new TipoControl(createDetailDto.TipoControl ?? string.Empty);
             var detail = productControl.AgregarDetalle(createDetailDto.Fecha, createDetailDto.Peso, tipoControl);
 
-            _productControlRepository.Update(productControl);
+            await _productControlRepository.AddDetail(detail);
             await _productControlRepository.Save();
             return MapProductControlDetailToResponseDto(detail);
         }

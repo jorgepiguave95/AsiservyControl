@@ -21,13 +21,19 @@ namespace Products.Infraestructure.Repositories
         public async Task<IEnumerable<ProductControl>> GetAll()
         => await _context.ProductControls.ToListAsync();
 
-        public async Task<ProductControl> GetById(Guid id)
-        => await _context.ProductControls.FindAsync(id);
+        public async Task<ProductControl?> GetById(Guid id)
+        => await _context.ProductControls
+            .Include(pc => pc.Detalles)
+            .FirstOrDefaultAsync(pc => pc.Id == id);
 
         public void Update(ProductControl entity)
         {
-            _context.ProductControls.Attach(entity);
-            _context.Entry(entity).State = EntityState.Modified;
+            var existingEntry = _context.Entry(entity);
+            if (existingEntry.State == EntityState.Detached)
+            {
+                _context.ProductControls.Attach(entity);
+            }
+            existingEntry.State = EntityState.Modified;
         }
 
         public void Delete(ProductControl entity)
@@ -47,5 +53,8 @@ namespace Products.Infraestructure.Repositories
 
         public async Task<ProductControlDetail?> GetDetailById(Guid detailId)
         => await _context.ProductControlDetails.FirstOrDefaultAsync(d => d.Id == detailId);
+
+        public async Task AddDetail(ProductControlDetail detail)
+        => await _context.ProductControlDetails.AddAsync(detail);
     }
 }

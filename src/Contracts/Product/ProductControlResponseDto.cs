@@ -12,5 +12,6 @@ namespace Contracts.Product
         public decimal PesoEnvase { get; set; }
         public decimal PesoNeto { get; set; }
         public bool EstaActivo { get; set; }
+        public string FechaFormateada => Fecha.ToString("dd/MM/yyyy HH:mm");
     }
 }

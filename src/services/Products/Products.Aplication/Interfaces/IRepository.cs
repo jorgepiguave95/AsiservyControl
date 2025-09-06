@@ -2,7 +2,7 @@
 {
     public interface IRepository<TEntity>
     {
-        Task<TEntity> GetById(Guid id);
+        Task<TEntity?> GetById(Guid id);
 
         Task<IEnumerable<TEntity>> GetAll();
 
