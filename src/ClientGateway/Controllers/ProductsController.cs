@@ -90,6 +90,11 @@ namespace ClientGateway.Controllers
         {
             try
             {
+                if (productData.Id != Guid.Empty && productData.Id != id)
+                {
+                    return BadRequest("El ID del parámetro no coincide con el ID del control de producto");
+                }
+
                 productData.Id = id;
 
                 var json = JsonSerializer.Serialize(productData);
@@ -188,6 +193,11 @@ namespace ClientGateway.Controllers
         {
             try
             {
+                if (detailData.Id != Guid.Empty && detailData.Id != id)
+                {
+                    return BadRequest("El ID del parámetro no coincide con el ID del detalle");
+                }
+
                 detailData.Id = id;
 
                 var json = JsonSerializer.Serialize(detailData);

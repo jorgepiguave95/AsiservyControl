@@ -33,6 +33,22 @@ namespace Customers.Domain.Entities
             Phone = newPhone ?? throw new DomainException("El teléfono es requerido");
         }
 
+        public void UpdateFirstName(string newFirstName)
+        {
+            if (string.IsNullOrWhiteSpace(newFirstName))
+                throw new DomainException("El nombre es requerido");
+
+            FirstName = newFirstName;
+        }
+
+        public void UpdateLastName(string newLastName)
+        {
+            if (string.IsNullOrWhiteSpace(newLastName))
+                throw new DomainException("El apellido es requerido");
+
+            LastName = newLastName;
+        }
+
         public void Activate()
         {
             EstaActivo = true;

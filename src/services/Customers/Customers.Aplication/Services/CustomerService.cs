@@ -40,6 +40,8 @@ namespace Customers.Aplication.Services
             if (customer == null)
                 return null;
 
+            customer.UpdateFirstName(updateCustomerDto.FirstName ?? string.Empty);
+            customer.UpdateLastName(updateCustomerDto.LastName ?? string.Empty);
             customer.UpdateEmail(new Email(updateCustomerDto.Email ?? string.Empty));
             customer.UpdatePhone(new PhoneNumber(updateCustomerDto.Phone ?? string.Empty));
 

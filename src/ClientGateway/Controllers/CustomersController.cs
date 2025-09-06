@@ -89,6 +89,11 @@ namespace ClientGateway.Controllers
         {
             try
             {
+                if (customerData.Id != Guid.Empty && customerData.Id != id)
+                {
+                    return BadRequest("El ID del parámetro no coincide con el ID del cliente");
+                }
+
                 customerData.Id = id;
 
                 var json = JsonSerializer.Serialize(customerData);
