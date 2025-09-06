@@ -12,7 +12,7 @@ namespace Customers.Infraestructure.Factories
             var dbPort = Environment.GetEnvironmentVariable("DB_PORT") ?? "1433";
             var dbUser = Environment.GetEnvironmentVariable("DB_USER") ?? "sa";
             var dbPass = Environment.GetEnvironmentVariable("DB_PASS") ?? "a6Dd7GLHK2Zg4HVvSn";
-            var dbName = Environment.GetEnvironmentVariable("DB_NAME_CONSUMER") ?? "CustomersDB";
+            var dbName = Environment.GetEnvironmentVariable("DB_NAME_CONSUMER") ?? "Customers";
 
             var connectionString = $"Server={dbHost},{dbPort};Database={dbName};User Id={dbUser};Password={dbPass};TrustServerCertificate=true;";
 

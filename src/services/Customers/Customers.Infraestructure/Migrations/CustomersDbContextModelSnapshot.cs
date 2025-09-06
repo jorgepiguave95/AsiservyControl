@@ -45,7 +45,7 @@ namespace Customers.Infraestructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Person", (string)null);
+                    b.ToTable("Person");
 
                     b.HasDiscriminator().HasValue("Person");
 
@@ -79,7 +79,7 @@ namespace Customers.Infraestructure.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Person", (string)null);
+                            b1.ToTable("Person");
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
@@ -98,7 +98,7 @@ namespace Customers.Infraestructure.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Person", (string)null);
+                            b1.ToTable("Person");
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");
