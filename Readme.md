@@ -33,35 +33,13 @@ Once all services are running successfully:
 | **Swagger UI**  | `http://localhost:3000/swagger` | Interactive API documentation |
 | **Database**    | `localhost:1433`                | SQL Server instance           |
 
-### Customers Service Migrations
+## Database Migrations
 
 ```bash
-# Create a new migration
-dotnet ef migrations add InitialCreate --project src/services/Customers/Customers.Infrastructure --startup-project src/services/Customers
-
-# Apply migrations to database
-dotnet ef database update --project src/services/Customers/Customers.Infrastructure --startup-project src/services/Customers
-
-# List all migrations
-dotnet ef migrations list --project src/services/Customers/Customers.Infrastructure --startup-project src/services/Customers
+dotnet ef migrations add AddCustomerEmailValidation
+dotnet ef migrations add CreateProductCategoryTable
+dotnet ef migrations add UpdateProductPriceConstraints
 ```
-
-### Products Service Migrations
-
-```bash
-# Create a new migration
-dotnet ef migrations add InitialCreate --project src/services/Products/Products.Infrastructure --startup-project src/services/Products
-
-# Apply migrations to database
-dotnet ef database update --project src/services/Products/Products.Infrastructure --startup-project src/services/Products
-
-# List all migrations
-dotnet ef migrations list --project src/services/Products/Products.Infrastructure --startup-project src/services/Products
-```
-
-### Testing
-
-Access the Swagger UI at `http://localhost:3000/swagger` to test all available endpoints interactively.
 
 ## Docker Services
 
@@ -89,19 +67,3 @@ docker-compose up --build gateway
 # View service logs
 docker-compose logs -f customers
 ```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For questions or support, please contact the development team or create an issue in the project repository.

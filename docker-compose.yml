@@ -33,7 +33,7 @@ services:
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
-      CUSTOMERS_DB_NAME: ${DB_NAME_CONSUMER}
+      DB_NAME: ${DB_NAME_CONSUMER}
     networks:
       - internal
       - database
@@ -51,7 +51,7 @@ services:
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASS: ${DB_PASS}
-      PRODUCTS_DB_NAME: ${DB_NAME_PRODUCT}
+      DB_NAME: ${DB_NAME_PRODUCT}
     networks:
       - internal
       - database

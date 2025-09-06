@@ -32,10 +32,10 @@ builder.Services.AddScoped<IProductControlRepository, ProductControlRepository>(
 var dbHost = builder.Configuration["DB_HOST"];
 var dbPort = builder.Configuration["DB_PORT"];
 var dbUser = builder.Configuration["DB_USER"];
-var dbPassword = builder.Configuration["DB_PASS"];
+var dbPass = builder.Configuration["DB_PASS"];
 var dbName = builder.Configuration["DB_NAME"];
 
-var connectionString = $"Server={dbHost},{dbPort};Database={dbName};User Id={dbUser};Password={dbPassword};TrustServerCertificate=true;";
+var connectionString = $"Server={dbHost},{dbPort};Database={dbName};User Id={dbUser};Password={dbPass};TrustServerCertificate=true;";
 
 builder.Services.AddDbContext<ProductsDbContext>(options =>
     options.UseSqlServer(connectionString));
