@@ -7,15 +7,14 @@ namespace Products.Aplication.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IRepository<ProductControl> _productControlRepository;
+        private readonly IProductControlRepository _productControlRepository;
 
-        public ProductService(IRepository<ProductControl> productControlRepository)
+        public ProductService(IProductControlRepository productControlRepository)
         {
             _productControlRepository = productControlRepository;
         }
 
         #region ProductControl
-
         public async Task<IEnumerable<ProductControlResponseDto>> GetAllProductControls()
         {
             var productControls = await _productControlRepository.GetAll();
@@ -52,27 +51,18 @@ namespace Products.Aplication.Services
             await _productControlRepository.Save();
             return MapProductControlToResponseDto(productControl);
         }
-
         #endregion
 
         #region ProductControlDetail
-
         public async Task<IEnumerable<ProductControlDetailResponseDto>> GetProductControlDetails(Guid productControlId)
         {
-            var productControl = await _productControlRepository.GetById(productControlId);
-            if (productControl == null)
-                return Enumerable.Empty<ProductControlDetailResponseDto>();
-
-            return productControl.Detalles.Select(MapProductControlDetailToResponseDto);
+            var details = await _productControlRepository.GetDetailsByProductControlId(productControlId);
+            return details.Select(MapProductControlDetailToResponseDto);
         }
 
         public async Task<ProductControlDetailResponseDto?> GetProductControlDetailById(Guid id)
         {
-            var allProductControls = await _productControlRepository.GetAll();
-            var detail = allProductControls
-                .SelectMany(pc => pc.Detalles)
-                .FirstOrDefault(d => d.Id == id);
-
+            var detail = await _productControlRepository.GetDetailById(id);
             return detail != null ? MapProductControlDetailToResponseDto(detail) : null;
         }
 
@@ -80,7 +70,7 @@ namespace Products.Aplication.Services
         {
             var productControl = await _productControlRepository.GetById(createDetailDto.ProductControlId);
             if (productControl == null)
-                throw new InvalidOperationException($"ProductControl with ID {createDetailDto.ProductControlId} not found");
+                throw new InvalidOperationException($"ProductControl con el ID {createDetailDto.ProductControlId} no encontrado");
 
             var tipoControl = new TipoControl(createDetailDto.TipoControl ?? string.Empty);
             var detail = productControl.AgregarDetalle(createDetailDto.Fecha, createDetailDto.Peso, tipoControl);
@@ -92,12 +82,13 @@ namespace Products.Aplication.Services
 
         public async Task<ProductControlDetailResponseDto?> UpdateProductControlDetail(UpdateProductControlDetailDto updateDetailDto)
         {
-            var allProductControls = await _productControlRepository.GetAll();
-            var productControl = allProductControls.FirstOrDefault(pc => pc.Detalles.Any(d => d.Id == updateDetailDto.Id));
-            var detail = productControl?.Detalles.FirstOrDefault(d => d.Id == updateDetailDto.Id);
+            var detail = await _productControlRepository.GetDetailById(updateDetailDto.Id);
+            if (detail == null)
+                throw new InvalidOperationException($"ProductControlDetail con el ID {updateDetailDto.Id} no encontrado");
 
-            if (detail == null || productControl == null)
-                return null;
+            var productControl = await _productControlRepository.GetById(detail.ProductControlId);
+            if (productControl == null)
+                throw new InvalidOperationException($"ProductControl con el ID {detail.ProductControlId} no encontrado");
 
             detail.SetFecha(updateDetailDto.Fecha);
             detail.SetPeso(updateDetailDto.Peso);
@@ -111,7 +102,6 @@ namespace Products.Aplication.Services
         #endregion
 
         #region Mappers
-
         private ProductControlResponseDto MapProductControlToResponseDto(ProductControl productControl)
         {
             return new ProductControlResponseDto
@@ -154,7 +144,6 @@ namespace Products.Aplication.Services
                 TipoControl = detail.TipoControl.Value
             };
         }
-
         #endregion
     }
 }

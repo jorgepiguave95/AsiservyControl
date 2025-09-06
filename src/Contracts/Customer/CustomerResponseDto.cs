@@ -8,6 +8,5 @@ namespace Contracts.Customer
         public string? Email { get; set; }
         public string? Phone { get; set; }
         public bool EstaActivo { get; set; }
-        public string FullName => $"{FirstName} {LastName}".Trim();
     }
 }

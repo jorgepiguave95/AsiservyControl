@@ -48,17 +48,6 @@ namespace Customers.Aplication.Services
             return MapToResponseDto(customer);
         }
 
-        public async Task<bool> DeleteCustomer(Guid id)
-        {
-            var customer = await _customerRepository.GetById(id);
-            if (customer == null)
-                return false;
-
-            _customerRepository.Delete(customer);
-            await _customerRepository.Save();
-            return true;
-        }
-
         public async Task<CustomerResponseDto?> ActivateCustomer(Guid id)
         {
             var customer = await _customerRepository.GetById(id);

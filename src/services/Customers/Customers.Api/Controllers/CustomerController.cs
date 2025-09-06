@@ -16,6 +16,7 @@ namespace Customers.Api.Controllers
             _customerService = customerService;
         }
 
+        #region Customer
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerResponseDto>>> GetAllCustomers()
         {
@@ -26,11 +27,11 @@ namespace Customers.Api.Controllers
             }
             catch (DomainException ex)
             {
-                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -39,20 +40,22 @@ namespace Customers.Api.Controllers
         {
             try
             {
+                if (id == Guid.Empty)
+                    return BadRequest("El ID no puede estar vacío");
+
                 var customer = await _customerService.GetCustomerById(id);
                 if (customer == null)
-                {
                     return NotFound($"Cliente con ID {id} no encontrado");
-                }
+
                 return Ok(customer);
             }
             catch (DomainException ex)
             {
-                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -62,20 +65,18 @@ namespace Customers.Api.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return BadRequest(ModelState);
-                }
 
                 var customer = await _customerService.AddCustomer(createCustomerDto);
                 return CreatedAtAction(nameof(GetCustomerById), new { id = customer.Id }, customer);
             }
             catch (DomainException ex)
             {
-                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -85,53 +86,24 @@ namespace Customers.Api.Controllers
             try
             {
                 if (id != updateCustomerDto.Id)
-                {
                     return BadRequest("El ID del parámetro no coincide con el ID del cliente");
-                }
 
                 if (!ModelState.IsValid)
-                {
                     return BadRequest(ModelState);
-                }
 
                 var customer = await _customerService.UpdateCustomer(updateCustomerDto);
                 if (customer == null)
-                {
                     return NotFound($"Cliente con ID {id} no encontrado");
-                }
 
                 return Ok(customer);
             }
             catch (DomainException ex)
             {
-                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCustomer(Guid id)
-        {
-            try
-            {
-                var deleted = await _customerService.DeleteCustomer(id);
-                if (!deleted)
-                {
-                    return NotFound($"Cliente con ID {id} no encontrado");
-                }
-
-                return NoContent();
-            }
-            catch (DomainException ex)
-            {
-                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -140,21 +112,22 @@ namespace Customers.Api.Controllers
         {
             try
             {
+                if (id == Guid.Empty)
+                    return BadRequest("El ID no puede estar vacío");
+
                 var customer = await _customerService.ActivateCustomer(id);
                 if (customer == null)
-                {
                     return NotFound($"Cliente con ID {id} no encontrado");
-                }
 
                 return Ok(customer);
             }
             catch (DomainException ex)
             {
-                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -163,22 +136,24 @@ namespace Customers.Api.Controllers
         {
             try
             {
+                if (id == Guid.Empty)
+                    return BadRequest("El ID no puede estar vacío");
+
                 var customer = await _customerService.DeactivateCustomer(id);
                 if (customer == null)
-                {
                     return NotFound($"Cliente con ID {id} no encontrado");
-                }
 
                 return Ok(customer);
             }
             catch (DomainException ex)
             {
-                return BadRequest(new { error = "Error de validación de dominio", message = ex.Message });
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+                return StatusCode(500, ex.Message);
             }
         }
+        #endregion
     }
 }

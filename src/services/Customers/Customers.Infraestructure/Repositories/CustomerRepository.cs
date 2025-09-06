@@ -24,8 +24,7 @@ namespace Customers.Infraestructure.Repositories
         public async Task<Customer> GetById(Guid id)
         => await _context.Customers.FindAsync(id);
 
-
-        public async void Update(Customer entity)
+        public void Update(Customer entity)
         {
             _context.Customers.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
