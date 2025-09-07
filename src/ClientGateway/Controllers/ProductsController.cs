@@ -116,6 +116,50 @@ namespace ClientGateway.Controllers
                 return StatusCode(500, ex + "Error al actualizar control de producto");
             }
         }
+
+        [HttpPatch("{id}/activate")]
+        public async Task<IActionResult> ActivateProductControl(Guid id)
+        {
+            try
+            {
+                var response = await _httpClient.PatchAsync($"api/product/{id}/activate", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var activatedProductControl = JsonSerializer.Deserialize<ProductControlResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(activatedProductControl);
+                }
+
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex + "Error al activar control de producto");
+            }
+        }
+
+        [HttpPatch("{id}/deactivate")]
+        public async Task<IActionResult> DeactivateProductControl(Guid id)
+        {
+            try
+            {
+                var response = await _httpClient.PatchAsync($"api/product/{id}/deactivate", null);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var responseContent = await response.Content.ReadAsStringAsync();
+                    var deactivatedProductControl = JsonSerializer.Deserialize<ProductControlResponseDto>(responseContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return Ok(deactivatedProductControl);
+                }
+
+                return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex + "Error al desactivar control de producto");
+            }
+        }
         #endregion
 
         #region ProductControlDetail Endpoints

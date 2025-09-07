@@ -106,6 +106,54 @@ namespace Products.Api.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPatch("{id}/activate")]
+        public async Task<ActionResult<ProductControlResponseDto>> ActivateProductControl(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    return BadRequest("El ID no puede estar vacío");
+
+                var productControl = await _productService.ActivateProductControl(id);
+                if (productControl == null)
+                    return NotFound($"Control de producto con ID {id} no encontrado");
+
+                return Ok(productControl);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPatch("{id}/deactivate")]
+        public async Task<ActionResult<ProductControlResponseDto>> DeactivateProductControl(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                    return BadRequest("El ID no puede estar vacío");
+
+                var productControl = await _productService.DeactivateProductControl(id);
+                if (productControl == null)
+                    return NotFound($"Control de producto con ID {id} no encontrado");
+
+                return Ok(productControl);
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
         #endregion
 
         #region ProductControlDetail

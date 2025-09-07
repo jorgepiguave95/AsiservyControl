@@ -51,6 +51,30 @@ namespace Products.Aplication.Services
             await _productControlRepository.Save();
             return MapProductControlToResponseDto(productControl);
         }
+
+        public async Task<ProductControlResponseDto?> ActivateProductControl(Guid id)
+        {
+            var productControl = await _productControlRepository.GetById(id);
+            if (productControl == null)
+                return null;
+
+            productControl.Activar();
+            _productControlRepository.Update(productControl);
+            await _productControlRepository.Save();
+            return MapProductControlToResponseDto(productControl);
+        }
+
+        public async Task<ProductControlResponseDto?> DeactivateProductControl(Guid id)
+        {
+            var productControl = await _productControlRepository.GetById(id);
+            if (productControl == null)
+                return null;
+
+            productControl.Desactivar();
+            _productControlRepository.Update(productControl);
+            await _productControlRepository.Save();
+            return MapProductControlToResponseDto(productControl);
+        }
         #endregion
 
         #region ProductControlDetail

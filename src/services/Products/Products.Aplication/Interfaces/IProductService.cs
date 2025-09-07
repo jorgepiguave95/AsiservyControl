@@ -9,6 +9,8 @@ namespace Products.Aplication.Interfaces
         Task<ProductControlResponseDto?> GetProductControlById(Guid id);
         Task<ProductControlResponseDto> AddProductControl(CreateProductControlDto createProductControlDto);
         Task<ProductControlResponseDto?> UpdateProductControl(UpdateProductControlDto updateProductControlDto);
+        Task<ProductControlResponseDto?> ActivateProductControl(Guid id);
+        Task<ProductControlResponseDto?> DeactivateProductControl(Guid id);
 
         // ProductControlDetail 
         Task<IEnumerable<ProductControlDetailResponseDto>> GetProductControlDetails(Guid productControlId);

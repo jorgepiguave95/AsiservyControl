@@ -42,7 +42,7 @@ namespace Products.Infraestructure.Repositories
         public async Task Save()
         => await _context.SaveChangesAsync();
 
-        // Métodos específicos de IProductControlRepository
+        // Métodos de IProductControlRepository
         public async Task<IEnumerable<ProductControlDetail>> GetDetailsByProductControlId(Guid productControlId)
         {
             return await _context.ProductControlDetails
