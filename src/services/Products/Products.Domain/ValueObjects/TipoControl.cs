@@ -19,8 +19,8 @@ namespace Products.Domain.ValueObjects
             if (string.IsNullOrWhiteSpace(value))
                 throw new DomainException("El tipo de control es requerido.");
 
-            if (!_validos.Contains(value))
-                throw new DomainException($"El tipo de control '{value}' no es válido. Valores permitidos: {string.Join(", ", _validos)}");
+            // if (!_validos.Contains(value))
+            //     throw new DomainException($"El tipo de control '{value}' no es válido. Valores permitidos: {string.Join(", ", _validos)}");
 
             Value = value;
         }
